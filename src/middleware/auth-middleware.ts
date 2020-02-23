@@ -1,3 +1,5 @@
+import { InvalidPermissionsError } from "../errors/InvalidPermissionsError"
+
 export const authFactory = (roles:string[])=>{
     return(req,res,next)=>{
         if(!req.session.user){
@@ -7,13 +9,13 @@ export const authFactory = (roles:string[])=>{
         }else{
             let allowed = false
             for(let role of roles){
-                if(req.session.user.role === role){
+                if(req.session.user.role.role === role){
                     allowed = true
                     next()
                 }
             }
             if(!allowed)
-            res.status(401).send('The incoming token has expired')
+            throw new InvalidPermissionsError()
         }
     } 
 }
@@ -24,5 +26,4 @@ export const authCheckId = (req,res,next)=>{
     }else{
         res.status(401).send('The incoming token has expired')
     }
-
 }

@@ -3,39 +3,41 @@ import { users } from './database'
 import { sessionMiddleware } from './middleware/session-middleware'
 import * as bodyparser from 'body-parser'
 import { BadCredentialError } from './errors/BadCredentialError'
+import { findUserByUsernameAndPassword } from './services/user-services'
+import { loggingMiddleware } from './middleware/logging-middleware'
+import {userRouter} from './routers/user-router'
 
 const app = express()
 
 app.use('/', bodyparser.json())
 
+app.use(loggingMiddleware)
+
 app.use(sessionMiddleware)
 
-app.post('/login', (req, res) => {
+app.use('/users', userRouter)
+
+
+app.post('/login', async (req, res) => {
     const { username, password } = req.body 
     
     if (!username || !password) {
         res.status(400).send('Please Include Username and Password')
     } else {
         try {
-            let user = findUserByUsernameAndPassword(username, password)
+            let user = await findUserByUsernameAndPassword(username, password)
+            
             req.session.user = user
+            
+            console.log(req.session.user.role.role);
+            
+
             res.status(200).json(user)//for ourself for the future
         } catch (e) {
-            res.status(e.status).send(e.message)
+            throw new BadCredentialError()
         }
     }
-
 })
-
-function findUserByUsernameAndPassword(username: string, password: string) {
-    for (let user of users) {
-        if (user.username === username && user.password === password) {
-            return user
-        }
-    }
-    throw new BadCredentialError()
-}
-
 
 app.listen(2002, () => {
     console.log('app has started on port 2002');

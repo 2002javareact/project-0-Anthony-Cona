@@ -10,17 +10,17 @@ export const userRouter = express.Router()
 
 //generally a get request to the root of a path
 //will give you every single one of those resources
-userRouter.get('', [authFactory(['finance-manager']), (req,res)=>{
+userRouter.get('', authFactory(['finance-manager']), (req,res)=>{
     //get all of our users
     //format them to json
     //use the response obj to send them back
     res.json(users)// this will format the object into json and send it back
     
-}])
+})
 
 // generally in rest convention
 // a post request to the root of a resource will make one new of that resource
-userRouter.post('', authFactory(['Admin']), (req,res)=>{
+userRouter.post('', authFactory(['admin']), (req,res)=>{
     let { username, password, 
     emailAddress, id,
     firstName, lastName,
