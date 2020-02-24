@@ -25,7 +25,7 @@ app.post('/login', async (req, res) => {
     } else {
         try {
             let user = await findUserByUsernameAndPassword(username, password)            
-            req.session.user = user            
+            req.session.user = user
             res.status(200).json(user)//for ourself for the future
         } catch (e) {
             throw new BadCredentialError()

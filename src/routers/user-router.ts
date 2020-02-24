@@ -1,7 +1,7 @@
 import * as express from 'express'
 import { authFactory, authCheckId } from '../middleware/auth-middleware'
 import { User } from '../models/User'
-import { findAllUsers } from '../services/user-services'
+import { findAllUsers, findUserById } from '../services/user-services'
 
 
 export const userRouter = express.Router()
@@ -10,11 +10,11 @@ export const userRouter = express.Router()
 
 //generally a get request to the root of a path
 //will give you every single one of those resources
-userRouter.get('', authFactory(['finance-manager']),async (req,res)=>{
+userRouter.get('', authFactory(['finance-manager']), async (req, res) => {
     //get all of our users
     //format them to json
     //use the response obj to send them back
-    let users:User[] = await findAllUsers()
+    let users: User[] = await findAllUsers()
     res.json(users)// this will format the object into json and send it back
 })
 
@@ -39,25 +39,18 @@ userRouter.get('', authFactory(['finance-manager']),async (req,res)=>{
 
 // in express we can add a path variable by using a colon in the path
 // this will add it to the request object and the colon makes it match anything
-/*userRouter.get('/:id', authFactory(['finance-manager', 'User']), authCheckId, (req,res)=>{
+userRouter.get('/:id', authFactory(['Everyone']), authCheckId, async (req, res) => {
     const id = +req.params.id// the plus sign is to type coerce into a number
-    if(isNaN(id)){
+    if (isNaN(id)) {
         res.sendStatus(400)
-    }else {
+    } else {
         // look through the "database"
-        let found = false
-        for(let user of users){
-            //find the matching id
-            if(user.userId === id){
-                //return the user
-                found=true
-                res.status(200).json(user)
-            }
+        try {
+            let user = await findUserById(id)
+            res.json(user)
+        } catch (e) {
+            res.status(e.status).send(e.message)
+
         }
-        //return a 404 not found
-        if(!found){
-            res.sendStatus(404)
-        }
-        
     }
-})*/
+})

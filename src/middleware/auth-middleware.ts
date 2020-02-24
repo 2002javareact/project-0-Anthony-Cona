@@ -1,29 +1,37 @@
 import { InvalidPermissionsError } from "../errors/InvalidPermissionsError"
 
-export const authFactory = (roles:string[])=>{
-    return(req,res,next)=>{
-        if(!req.session.user){
+export const authFactory = (roles: string[]) => {
+    return (req, res, next) => {
+        if (!req.session.user) {
             res.status(401).send('Please Login')
-        }else if(roles.includes('Everyone')){
+        } else if (roles.includes('Everyone')) {
             next()
-        }else{
+        } else {
             let allowed = false
-            for(let role of roles){
-                if(req.session.user.role.role === role){
+            for (let role of roles) {
+                if (req.session.user.role.role === role) {
+                    
                     allowed = true
                     next()
                 }
             }
-            if(!allowed)
-            throw new InvalidPermissionsError()
+            if (!allowed) {
+                console.log(req.session.user.role.role);
+
+                throw new InvalidPermissionsError()
+            }
         }
-    } 
+    }
 }
 
-export const authCheckId = (req,res,next)=>{
-    if(req.session.user.id === +req.params.id){
+export const authCheckId = (req, res, next) => {
+    if (req.session.user.role.role === 'finance-manager') {
         next()
-    }else{
-        res.status(401).send('The incoming token has expired')
+    } else if (req.session.user.userId === +req.params.id) {
+        next()
+    } else {
+        console.log(req.session.user.userId);
+        
+        res.status(403).send('You are Unauthorized for this endpoint')
     }
 }

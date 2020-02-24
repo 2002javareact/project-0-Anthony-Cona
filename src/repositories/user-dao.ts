@@ -4,6 +4,7 @@ import { userDTOToUserConverter } from "../util/user-dto-to-user-converter"
 import { User } from "../models/User"
 import { InternalServerError } from "../errors/InternalServerError"
 import { BadCredentialError } from "../errors/BadCredentialError"
+import { UserNotFoundError } from "../errors/UserNotFoundError"
 
 export async function daoFindUserByUsernameAndPassword(username:string,password:string):Promise<User>{
     let client:PoolClient// our potential connection to db
@@ -41,11 +42,11 @@ export async function daoFindAllUsers():Promise<User[]>{
 }
 
 
-/*export async function daoFindUserById(id:number):Promise<User>{
+export async function daoFindUserById(id:number):Promise<User>{
     let client:PoolClient
     try{
         client = await connectionPool.connect()
-        let result = await client.query('SELECT * FROM projectzero.users U inner join projectzero.roles R on U."role" = R.role_id WHERE U.user_id = $1', [id])
+        let result = await client.query('SELECT * FROM projectzero.users U inner join projectzero.roles R on U."role" = R.roleid WHERE U.userid = $1', [id])
         if(result.rowCount === 0){
             throw new Error('User Not Found')
         }
@@ -54,10 +55,10 @@ export async function daoFindAllUsers():Promise<User[]>{
         // id DNE
         //need if for that
         if(e.message ==='User Not Found'){
-            //throw new UserNotFoundError()
+            throw new UserNotFoundError()
         }
         throw new InternalServerError()
     } finally {
         client && client.release()
     }
-}*/
+}
