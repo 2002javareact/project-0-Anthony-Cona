@@ -17,12 +17,9 @@ export async function daoFindUserByUsernameAndPassword(username:string,password:
         }
         
         return userDTOToUserConverter(results.rows[0])
-    } catch(e){
-        console.log(e);
+    }catch(e){
         if(e.message === 'User Not Found'){
             throw new BadCredentialError()
-        }else {
-            throw new InternalServerError()
         }
     } finally {
         client && client.release()
@@ -33,9 +30,8 @@ export async function daoFindAllUsers():Promise<User[]>{
     let client:PoolClient
     try{
         client = await connectionPool.connect()
-        let results = await client.query('SELECT * FROM projectzero.users U inner join projectzero.roles R on U."role" = R.role_id')
+        let results = await client.query('SELECT * FROM projectzero.users U inner join projectzero.roles R on U."role" = R.roleid')
         return results.rows.map(userDTOToUserConverter)
-        //return null
     }catch(e){
         throw new InternalServerError()
     } finally {
@@ -45,7 +41,7 @@ export async function daoFindAllUsers():Promise<User[]>{
 }
 
 
-export async function daoFindUserById(id:number):Promise<User>{
+/*export async function daoFindUserById(id:number):Promise<User>{
     let client:PoolClient
     try{
         client = await connectionPool.connect()
@@ -64,4 +60,4 @@ export async function daoFindUserById(id:number):Promise<User>{
     } finally {
         client && client.release()
     }
-}
+}*/

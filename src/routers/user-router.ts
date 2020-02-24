@@ -1,7 +1,7 @@
 import * as express from 'express'
-import { users } from '../database'
-import { User } from '../models/User'
 import { authFactory, authCheckId } from '../middleware/auth-middleware'
+import { User } from '../models/User'
+import { findAllUsers } from '../services/user-services'
 
 
 export const userRouter = express.Router()
@@ -10,17 +10,17 @@ export const userRouter = express.Router()
 
 //generally a get request to the root of a path
 //will give you every single one of those resources
-userRouter.get('', authFactory(['finance-manager']), (req,res)=>{
+userRouter.get('', authFactory(['finance-manager']),async (req,res)=>{
     //get all of our users
     //format them to json
     //use the response obj to send them back
+    let users:User[] = await findAllUsers()
     res.json(users)// this will format the object into json and send it back
-    
 })
 
 // generally in rest convention
 // a post request to the root of a resource will make one new of that resource
-userRouter.post('', authFactory(['admin']), (req,res)=>{
+/*userRouter.post('', authFactory(['admin']), (req,res)=>{
     let { username, password, 
     emailAddress, id,
     firstName, lastName,
@@ -35,11 +35,11 @@ userRouter.post('', authFactory(['admin']), (req,res)=>{
         // for setting a status and a body
     }
 
-})
+})*/
 
 // in express we can add a path variable by using a colon in the path
 // this will add it to the request object and the colon makes it match anything
-userRouter.get('/:id', authFactory(['finance-manager', 'User']), authCheckId, (req,res)=>{
+/*userRouter.get('/:id', authFactory(['finance-manager', 'User']), authCheckId, (req,res)=>{
     const id = +req.params.id// the plus sign is to type coerce into a number
     if(isNaN(id)){
         res.sendStatus(400)
@@ -60,4 +60,4 @@ userRouter.get('/:id', authFactory(['finance-manager', 'User']), authCheckId, (r
         }
         
     }
-})
+})*/
