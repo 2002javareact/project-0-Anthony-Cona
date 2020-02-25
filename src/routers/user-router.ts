@@ -1,7 +1,7 @@
 import * as express from 'express'
 import { authFactory, authCheckId } from '../middleware/auth-middleware'
 import { User } from '../models/User'
-import { findAllUsers, findUserById } from '../services/user-services'
+import { findAllUsers, findUserById, updateUser } from '../services/user-services'
 
 
 export const userRouter = express.Router()
@@ -10,7 +10,7 @@ export const userRouter = express.Router()
 
 //generally a get request to the root of a path
 //will give you every single one of those resources
-userRouter.get('', authFactory(['finance-manager']), async (req, res) => {
+userRouter.get('', authFactory(['admin','finance-manager']), async (req, res) => {
     //get all of our users
     //format them to json
     //use the response obj to send them back
@@ -20,26 +20,31 @@ userRouter.get('', authFactory(['finance-manager']), async (req, res) => {
 
 // generally in rest convention
 // a post request to the root of a resource will make one new of that resource
-/*userRouter.post('', authFactory(['admin']), (req,res)=>{
-    let { username, password, 
-    emailAddress, id,
+userRouter.patch('', authFactory(['admin']), async (req,res)=>{
+    let { userName, password, 
+    email, userId,
     firstName, lastName,
     role } = req.body// this will be where the data the sent me is
     // the downside is this is by default just a string of json, not a js object
-    if(username && password && emailAddress && id && firstName && lastName && role){
-        users.push(new User(username,password,emailAddress,id,firstName,lastName,role))
-        // this would be some function for adding a new user to a db
-        res.sendStatus(201)// if I don't need to seend a body
+   // console.log(req.body);
+    
+    if(userId && (userName || password || email || firstName || lastName || role)){
+    
+        let user = await updateUser(req.body)
+        res.json(user)
+        
     } else {
-        res.status(400).send('Please include all user fields')
-        // for setting a status and a body
+        if(!userId){
+        res.status(400).send('Please include User Id')
+        }else{
+            res.status(400).send('Please include atleast one field to update')    
+        }
     }
-
-})*/
+})
 
 // in express we can add a path variable by using a colon in the path
 // this will add it to the request object and the colon makes it match anything
-userRouter.get('/:id', authFactory(['Everyone']), authCheckId, async (req, res) => {
+userRouter.get('/:id', authFactory(['admin','finance-manager','user']), authCheckId, async (req, res) => {
     const id = +req.params.id// the plus sign is to type coerce into a number
     if (isNaN(id)) {
         res.sendStatus(400)

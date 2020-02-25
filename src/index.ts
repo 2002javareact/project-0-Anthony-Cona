@@ -5,6 +5,7 @@ import { BadCredentialError } from './errors/BadCredentialError'
 import { findUserByUsernameAndPassword } from './services/user-services'
 import { loggingMiddleware } from './middleware/logging-middleware'
 import {userRouter} from './routers/user-router'
+import { reimbursementRouter } from './routers/reimbursement-router'
 
 const app = express()
 
@@ -15,6 +16,8 @@ app.use(loggingMiddleware)
 app.use(sessionMiddleware)
 
 app.use('/users', userRouter)
+
+app.use('/reimbursements', reimbursementRouter)
 
 
 app.post('/login', async (req, res) => {

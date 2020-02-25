@@ -25,13 +25,11 @@ export const authFactory = (roles: string[]) => {
 }
 
 export const authCheckId = (req, res, next) => {
-    if (req.session.user.role.role === 'finance-manager') {
+    if (req.session.user.role.role === 'finance-manager'|| req.session.user.role.role === 'admin') {
         next()
     } else if (req.session.user.userId === +req.params.id) {
         next()
     } else {
-        console.log(req.session.user.userId);
-        
         res.status(403).send('You are Unauthorized for this endpoint')
     }
 }
