@@ -36,16 +36,19 @@ reimbursementRouter.get('/author/userId/:userId', authFactory(['admin', 'finance
 })
 
 reimbursementRouter.post('', authFactory(['admin', 'finance-manager', 'user']), async (req, res) => {
-    let { author, amount, dateSubmitted,
+    let { reimbursementId,author, amount, dateSubmitted,
         dateResolved, description, resolver,
         status, type } = req.body
 
-    if (author && amount && dateSubmitted && dateResolved && description && resolver && status && type) {
+    if (amount && description && type) {
         try {
 
-            let reimbursement = await addReimbursement(new Reimbursement(0, author, amount, dateSubmitted, dateResolved, description, resolver, status, type))
+            let reimbursement = await addReimbursement(new Reimbursement(0, req.session.user.userId, amount, new Date().toLocaleDateString() , '1970/01/01', description, null, 1, type))
+            
             res.json(reimbursement).sendStatus(201)
         } catch (e) {
+            console.log(e);
+            
             throw new InternalServerError()
         }
     } else {
@@ -55,17 +58,17 @@ reimbursementRouter.post('', authFactory(['admin', 'finance-manager', 'user']), 
 })
 
 reimbursementRouter.patch('', authFactory(['admin', 'finance-manager']), async (req, res) => {
-    let { reimbursementId, author, amount, datesubmitted,
+    let { reimbursementid, author, amount, datesubmitted,
         dateresolved, description, resolver,
         status, type } = req.body
 
-    if (reimbursementId && (author || amount || datesubmitted || dateresolved || description || resolver || status || type)) {
+    if (reimbursementid && (author || amount || datesubmitted || dateresolved || description || resolver || status || type)) {
         let reimbursement = await updateReimbursement(req.body)
         res.json(reimbursement)
 
 
     } else {
-        if (!reimbursementId) {
+        if (!reimbursementid) {
             res.status(400).send('Please include Reimbursement Id')
         }else{
             res.status(400).send('Please include atleast one field to update')    
