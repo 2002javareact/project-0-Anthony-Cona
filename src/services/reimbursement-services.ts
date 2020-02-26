@@ -1,5 +1,6 @@
 import { Reimbursement } from "../models/Reimbursement";
 import { daoFindByStatusId, daoFindByUserId, daoAddReimbursement, daoUpdateReimbursement } from "../repositories/reimbursement-dao";
+//Bridge between client side and server side
 
 export async function findByStatusId(id:number):Promise<Reimbursement[]>{
     return await daoFindByStatusId(id)

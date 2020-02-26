@@ -1,5 +1,7 @@
 import { InvalidPermissionsError } from "../errors/InvalidPermissionsError"
 
+//Takes a string array, checks against the current user and the array, if the users role matches one of the string array it calls next()
+//This allows for addtional actions to be taken by authorized users
 export const authFactory = (roles: string[]) => {
     return (req, res, next) => {
         if (!req.session.user) {
@@ -24,10 +26,11 @@ export const authFactory = (roles: string[]) => {
     }
 }
 
+//Checks an ID value to allow users of a particular Id to view their own information
 export const authCheckId = (req, res, next) => {
     if (req.session.user.role.role === 'finance-manager'|| req.session.user.role.role === 'admin') {
         next()
-    } else if (req.session.user.userId === +req.params.id) {
+    } else if (req.session.user.userId === +req.params.id||req.session.user.userId === +req.params.userId) {
         next()
     } else {
         res.status(403).send('You are Unauthorized for this endpoint')

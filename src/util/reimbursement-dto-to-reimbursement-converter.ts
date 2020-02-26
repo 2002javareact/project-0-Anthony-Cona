@@ -1,8 +1,7 @@
 import { Reimbursement } from "../models/Reimbursement";
 import { ReimbursementDTO } from "../dtos/reimbursementDTO";
 
-
-
+//Convers the DTO model to the non-DTO model
 export function reimbursementDTOToReimbursementConverter(reimbursementDTO:ReimbursementDTO):Reimbursement{
     return new Reimbursement(
         reimbursementDTO.reimbursementid,

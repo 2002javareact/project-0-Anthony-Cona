@@ -1,12 +1,12 @@
 import { Role } from './Role'
 export class User {
-    userId: number // primary key
-    userName: string // not null, unique
-    password: string // not null
-    firstName: string // not null
-    lastName: string // not null
-    email: string // not null
-    role: Role // not null
+    userId: number
+    userName: string
+    password: string 
+    firstName: string 
+    lastName: string 
+    email: string 
+    role: Role
 
     constructor(userId: number, userName: string, password: string, firstName: string, lastName: string, email: string, role: Role) {
         this.userId = userId

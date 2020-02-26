@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 
+//Used to view the kind of request is being sent and from where
 export function loggingMiddleware(req:Request,res:Response,next:NextFunction){
 
-console.log(`Request Url is ${req.url} and Request Method is ${req.method} `)
-//we need to remember to call res or the next function however we cant do both
-
-next()
-
+    console.log(`Request Url is ${req.url} and Request Method is ${req.method} `)
+    next()
 }

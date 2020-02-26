@@ -2,6 +2,7 @@ import { UserDTO } from "../dtos/userDTO";
 import { User } from "../models/User";
 import { Role } from "../models/Role";
 
+//Convers the DTO model to the non-DTO model
 export function userDTOToUserConverter(userDTO:UserDTO):User{
     return new User(
         userDTO.userid,

@@ -1,5 +1,6 @@
 import {  daoFindUserByUsernameAndPassword, daoFindAllUsers, daoFindUserById, daoUpdateUser } from "../repositories/user-dao";
 import { User } from "../models/User";
+//Bridge between client side and server side
 
 export async function findUserByUsernameAndPassword(username:string, password:string): Promise<User>{
        return await daoFindUserByUsernameAndPassword(username,password)

@@ -9,17 +9,22 @@ import { reimbursementRouter } from './routers/reimbursement-router'
 
 const app = express()
 
+//parses information into json
 app.use('/', bodyparser.json())
 
+//logs information back to the terminal
 app.use(loggingMiddleware)
 
+//sets up a session
 app.use(sessionMiddleware)
 
+//calls userRouter to use request on that url
 app.use('/users', userRouter)
 
+//calls reimbursementRouter to use request on that url
 app.use('/reimbursements', reimbursementRouter)
 
-
+//logs user in via a post request
 app.post('/login', async (req, res) => {
     const { username, password } = req.body 
     
@@ -37,6 +42,7 @@ app.post('/login', async (req, res) => {
     }
 })
 
+//Creates a connection on the localhost 2002
 app.listen(2002, () => {
     console.log('app has started on port 2002');
 })

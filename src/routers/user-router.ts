@@ -5,34 +5,23 @@ import { findAllUsers, findUserById, updateUser } from '../services/user-service
 
 
 export const userRouter = express.Router()
-// this will work almost exactly like it does with userRouter up in index
 
-
-//generally a get request to the root of a path
-//will give you every single one of those resources
+//get request that admins and finance-manages can use to return all users
 userRouter.get('', authFactory(['admin','finance-manager']), async (req, res) => {
-    //get all of our users
-    //format them to json
-    //use the response obj to send them back
     let users: User[] = await findAllUsers()
-    res.json(users)// this will format the object into json and send it back
+    res.json(users)
 })
 
-// generally in rest convention
-// a post request to the root of a resource will make one new of that resource
+//patch request that only admins can use to update a users information
 userRouter.patch('', authFactory(['admin']), async (req,res)=>{
     let { userName, password, 
     email, userId,
     firstName, lastName,
-    role } = req.body// this will be where the data the sent me is
-    // the downside is this is by default just a string of json, not a js object
-   // console.log(req.body);
+    role } = req.body
     
     if(userId && (userName || password || email || firstName || lastName || role)){
-    
         let user = await updateUser(req.body)
         res.json(user)
-        
     } else {
         if(!userId){
         res.status(400).send('Please include User Id')
@@ -42,20 +31,17 @@ userRouter.patch('', authFactory(['admin']), async (req,res)=>{
     }
 })
 
-// in express we can add a path variable by using a colon in the path
-// this will add it to the request object and the colon makes it match anything
+//get request that can be used by admins,finance-managers, and users with that id to return a single user by id
 userRouter.get('/:id', authFactory(['admin','finance-manager','user']), authCheckId, async (req, res) => {
-    const id = +req.params.id// the plus sign is to type coerce into a number
+    const id = +req.params.id
     if (isNaN(id)) {
         res.sendStatus(400)
     } else {
-        // look through the "database"
         try {
             let user = await findUserById(id)
             res.json(user)
         } catch (e) {
             res.status(e.status).send(e.message)
-
         }
     }
 })

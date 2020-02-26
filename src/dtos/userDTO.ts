@@ -8,12 +8,9 @@ export class UserDTO {
     firstname:string
     lastname:string
     email:string
-    // a unique number for identification
+    
     role:string
     roleid:number
-     // their user permissions
-    // user - for you can use the service
-    // admin - you can ban people or add/remove movies
     constructor(username:string,
         password:string,
         email:string,
