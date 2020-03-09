@@ -6,6 +6,7 @@ import { findUserByUsernameAndPassword } from './services/user-services'
 import { loggingMiddleware } from './middleware/logging-middleware'
 import {userRouter} from './routers/user-router'
 import { reimbursementRouter } from './routers/reimbursement-router'
+import { corsFilter } from './middleware/cors-filter'
 
 const app = express()
 
@@ -17,6 +18,8 @@ app.use(loggingMiddleware)
 
 //sets up a session
 app.use(sessionMiddleware)
+
+app.use(corsFilter)
 
 //calls userRouter to use request on that url
 app.use('/users', userRouter)
