@@ -11,5 +11,4 @@ export function corsFilter(req:Request,res:Response,next){
     }else{
         next()
     }
-
 }
