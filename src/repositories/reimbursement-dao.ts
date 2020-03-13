@@ -68,11 +68,11 @@ export async function daoAddReimbursement(newReimbursement: Reimbursement): Prom
 
 //Takes in reimbursement information, query's the reimbursement to be update by required id value, stores the new information into the reimbursement
 //Runs an update statement with the new information, then returns the updated information 
-export async function daoUpdateReimbursement(reimbursementUpdate: any): Promise<Reimbursement> {
+export async function daoUpdateReimbursement(reimbursementUpdate: Reimbursement): Promise<Reimbursement> {
     let client: PoolClient
     try {
         client = await connectionPool.connect()
-        let result = await client.query('select * from projectzero.reimbursement where reimbursementid = $1', [reimbursementUpdate.reimbursementid])
+        let result = await client.query('select * from projectzero.reimbursement where reimbursementid = $1', [reimbursementUpdate.reimbursementId])
         let currentReimbursement = reimbursementDTOToReimbursementConverter(result.rows[0])
 
         //use Default operators checks for exsisting data to change and keeps old data if their is no new data 
