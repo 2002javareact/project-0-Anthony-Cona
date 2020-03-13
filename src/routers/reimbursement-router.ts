@@ -58,18 +58,18 @@ reimbursementRouter.post('', authFactory(['admin', 'finance-manager', 'user']), 
 
 //Patch request, that only admins and finance-managers can call. passes in information to be update for reimbursements
 reimbursementRouter.patch('', authFactory(['admin', 'finance-manager']), async (req, res) => {
-    let { reimbursementid, author, amount, datesubmitted,
-        dateresolved, description, resolver,
+    let { reimbursementId, author, amount, dateSubmitted,
+        dateResolved, description, resolver,
         status, type } = req.body
 
-        let updatedReimbursement = await addReimbursement(new Reimbursement(reimbursementid, author, amount, datesubmitted , new Date().toLocaleDateString(), description, resolver, status, type))
+        let updatedReimbursement = await addReimbursement(new Reimbursement(reimbursementId, author, amount, dateSubmitted , new Date().toLocaleDateString(), description, resolver, status, type))
             
 
-    if (reimbursementid && (author || amount || datesubmitted || dateresolved || description || resolver || status || type)) {
+    if (reimbursementId && (author || amount || dateSubmitted || dateResolved || description || resolver || status || type)) {
         let reimbursement = await updateReimbursement(updatedReimbursement)
         res.json(reimbursement)
     } else {
-        if (!reimbursementid) {
+        if (!reimbursementId) {
             res.status(400).send('Please include Reimbursement Id')
         }else{
             res.status(400).send('Please include atleast one field to update')    
