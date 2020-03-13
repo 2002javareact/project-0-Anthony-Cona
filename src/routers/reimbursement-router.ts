@@ -62,8 +62,11 @@ reimbursementRouter.patch('', authFactory(['admin', 'finance-manager']), async (
         dateresolved, description, resolver,
         status, type } = req.body
 
+        let updatedReimbursement = await addReimbursement(new Reimbursement(reimbursementid, author, amount, datesubmitted , new Date().toLocaleDateString(), description, resolver, status, type))
+            
+
     if (reimbursementid && (author || amount || datesubmitted || dateresolved || description || resolver || status || type)) {
-        let reimbursement = await updateReimbursement(req.body)
+        let reimbursement = await updateReimbursement(updatedReimbursement)
         res.json(reimbursement)
     } else {
         if (!reimbursementid) {
