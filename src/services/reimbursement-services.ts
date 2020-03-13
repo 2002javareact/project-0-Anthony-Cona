@@ -15,6 +15,6 @@ export async function addReimbursement(newReimbursement:Reimbursement):Promise<R
     return await daoAddReimbursement(newReimbursement)
 }
 
-export async function updateReimbursement(reimbursementUpdate:Reimbursement):Promise<Reimbursement>{
+export async function updateReimbursement(reimbursementUpdate:any):Promise<Reimbursement>{
     return await daoUpdateReimbursement(reimbursementUpdate)
 }
