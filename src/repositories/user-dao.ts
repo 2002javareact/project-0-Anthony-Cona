@@ -77,7 +77,7 @@ export async function daoUpdateUser(userUpdate: any): Promise<User> {
         user.lastName = userUpdate.lastName || user.lastName
         user.email = userUpdate.email || user.email
         user.password = userUpdate.password || user.password
-        user.role.roleId = userUpdate.roleId || user.role.roleId
+        user.role.roleId = userUpdate.role || user.role.roleId
 
         client = await connectionPool.connect()
         await client.query('update projectzero.users set username = $1 , "password" = $2, firstName = $3, lastName = $4, email = $5, "role" = $6 where userId = $7;',
